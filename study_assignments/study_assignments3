@@ -1,0 +1,147 @@
+using System;
+using System.Diagnostics;
+using System.Numerics;
+
+namespace LiczbyPierwsze
+{
+    class Program
+    {
+        static ulong DivsNum; 
+        static bool AlgorytmPrzykładowy(BigInteger Num)
+        { 
+            if (Num < 2) 
+                return false; 
+            else if(Num < 4) 
+                return true; 
+            else if(Num % 2 == 0) 
+                return false; 
+            else 
+                for(BigInteger u = 3; u < Num / 2; u += 2) 
+                    if (Num % u == 0) return false;
+            return true; 
+        }
+        static bool AlgorytmPrzykładowyInstrumentacja(BigInteger Num)
+        {
+            if (Num < 2)
+                return false;
+            else if (Num < 4)
+                return true;
+            else if (Num % 2 == 0)
+                return false;
+            else
+                for (BigInteger u = 3; u < Num / 2; u += 2)
+                {
+                    DivsNum++;
+                    if (Num % u == 0) return false;
+                }
+            return true;
+        }
+        static bool AlgorytmLepszy(BigInteger Num) 
+        {
+            if (Num < 2) return false;
+            else if (Num < 4) return true;
+            else if (Num % 2 == 0) return false;
+            else
+            {
+                for (BigInteger i = 3; i * i <= Num; i += 2)
+                {
+                    if (Num % i == 0) return false;
+                }
+            }
+            return true;
+        }
+        static bool AlgorytmLepszyInstrumentacja(BigInteger Num) 
+        {
+            if (Num < 2) return false;
+            else if (Num < 4) return true;
+            else if (Num % 2 == 0) return false;
+            else
+            {
+                for (BigInteger i = 3; i * i <= Num; i += 2)
+                {
+                    DivsNum++;
+                    if (Num % i == 0) return false;
+                }
+            }
+            return true;
+        }
+        static bool AlgorytmJeszczeLepszy(BigInteger Num) 
+        {
+            if (Num == 2) return false;
+            else if (Num == 3) return true;
+            else if (Num == 5) return true;
+            else if (Num % 2 == 0) return false;
+            else if (Num % 5 == 0) return false;
+            else
+            {
+                for (BigInteger i = 6; i * i <= Num; i +=6)
+                {
+                    if (Num % (i-1) == 0 && Num % (i + 1) == 0) return false;
+                }
+            }
+            return true;
+        }
+        //
+        static bool AlgorytmJeszczeLepszyInstrumentacja(BigInteger Num) 
+        {
+            if (Num == 2) return false;
+            else if (Num == 3) return true;
+            else if (Num == 5) return true;
+            else if (Num % 2 == 0) return false;
+            else if (Num % 5 == 0) return false;
+            else
+            {
+                for (BigInteger i = 6; i * i <= Num; i += 6)
+                {
+                    DivsNum++;
+                    if (Num % (i - 1) == 0 && Num % (i + 1) == 0) return false;
+                }
+            }
+            return true;
+        }
+        //--------------------    
+        static void Main()
+        {
+            Stopwatch st = new Stopwatch();
+            long[] time = new long[8*3];
+            ulong[] divnu = new ulong[8*3];
+            BigInteger[] tab = new BigInteger[] { 100913, 1009139, 10091401, 100914061, 1009140611, 10091406133, 100914061337, 1009140613399 };
+            for (int i = 0; i < tab.Length; i++)
+            {
+                st.Start();
+                AlgorytmPrzykładowy(tab[i]);
+                st.Stop();
+                time[i] = st.ElapsedMilliseconds;
+                st.Reset();
+                DivsNum = 1;
+                AlgorytmPrzykładowyInstrumentacja(tab[i]);
+                divnu[i] = DivsNum;
+                DivsNum = 1;
+
+                st.Start();
+                AlgorytmLepszy(tab[i]);
+                st.Stop();
+                time[i+8] = st.ElapsedMilliseconds;
+                st.Reset();
+                AlgorytmLepszyInstrumentacja(tab[i]);
+                divnu[i+8] = DivsNum;
+                DivsNum = 2;
+
+                st.Start();
+                AlgorytmJeszczeLepszy(tab[i]);
+                st.Stop();
+                time[i+16] = st.ElapsedMilliseconds;
+                st.Reset();
+                Console.WriteLine(AlgorytmJeszczeLepszyInstrumentacja(tab[i]));
+                divnu[i+16] = DivsNum;
+
+                Console.WriteLine("n = {0} |przykład: czas {1} liczba operacji {2} | lepszy: czas {3} liczba operacji {4} | jeszcze lepszy: czas {5} liczba operacji {6}", tab[i],time[i],divnu[i], time[i+8], divnu[i+8], time[i+16], divnu[i+16]);
+            }
+            for (int i = 0; i < tab.Length; i++)
+            {
+                Console.WriteLine("n={0} {1} {2} {3} {4} {5} {6}", tab[i], time[i], divnu[i], time[i + 8], divnu[i + 8], time[i + 16], divnu[i + 16]);
+            }
+            }
+
+    }
+}
