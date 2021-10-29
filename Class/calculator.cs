@@ -1,44 +1,58 @@
 using System;
 
-namespace calculator
+namespace classfunctions
 {
     class tasks
     {
-        public static double calculator(double a,double b,double swit)
+        private double x;
+        private double y;
+
+        public tasks(double x,double y)
+        {
+            this.x = x;
+            this.y = y;
+        }
+
+        public double X { get => x; set => x = value; }
+        public double Y { get => y; set => y = value; }
+
+        public double calculator(double swit)
         {
             switch (swit)
             {
                 case 1:
-                    return aad(a, b);
+                    return aad();
                 case 2:
-                    return a - b;
+                    return x - y;
                 case 3:
-                    return a * b;
+                    return x * y;
                 case 4:
-                    return a / b;
+                    return x / y;
                 case 5:
-                    return Math.Pow(a,b);
+                    return Math.Pow(x,y);
                 case 6:
-                    return Math.Sqrt(a);
+                    return Math.Sqrt(x);
                 default:
                     return 0;
             }
         }
-        static double aad(double a, double b)
+        private double aad()
         {
-            return a + b;
+            return x+y;
         }
     }
     class Program
     {
         static void Main(string[] args)
         {
+            
             string endprogram="no";
             do
             {
                 int a=0, b=0;
                 uint choice =0;
                 bool t = true;
+                tasks ts = new tasks(a, b);
                 do
                 {
                     Console.WriteLine("Enter two numbers");
@@ -47,6 +61,9 @@ namespace calculator
                         a = int.Parse(Console.ReadLine());
                         b = int.Parse(Console.ReadLine());
                         t = false;
+                        ts.X = a;
+                        ts.Y = b;
+
                     }
                     catch (FormatException e)
                     {
@@ -78,7 +95,7 @@ namespace calculator
                     }
                 }
                 while (t);
-                Console.WriteLine("Score: "+tasks.calculator(a, b, choice)+"\n");
+                Console.WriteLine("Score: "+ts.calculator(choice)+"\n");
                 Console.WriteLine("Type yes to exit the program");
                 endprogram =  Console.ReadLine();
                 endprogram = endprogram.ToLower();
